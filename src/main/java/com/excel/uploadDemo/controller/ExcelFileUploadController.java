@@ -21,7 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.excel.uploadDemo.dto.AjaxResponse;
 import com.excel.uploadDemo.dto.ManualAdhocDto;
-import com.excel.uploadDemo.dto.ManualAdhocEntity;
+import com.excel.uploadDemo.entity.ManualAdhocEntity;
 import com.excel.uploadDemo.repo.ManualAdhocEntityRepo;
 import com.excel.uploadDemo.utils.ColumnValidator;
 import com.excel.uploadDemo.utils.CommonConstant;
@@ -74,7 +74,9 @@ public class ExcelFileUploadController {
 	            
 	            // Here all the column convert into the String 
 				
+	            // by default first selected all the check-boxes
 					manualAdhoc.setSelected(true);
+					// ExcelUtils.getCellValueAsString use for any cell datatype convert into the String
 					manualAdhoc.setDate(ExcelUtils.getCellValueAsString(row.getCell(0)));
 					manualAdhoc.setEmpCd(ExcelUtils.getCellValueAsString(row.getCell(1)));
 					manualAdhoc.setEmployeeName(ExcelUtils.getCellValueAsString(row.getCell(2)));
@@ -138,6 +140,7 @@ public class ExcelFileUploadController {
             		
             		 );
 	    	
+            // convert String List to the Dto With Column And Custom Data type checking
 	        response.setManualAdhocData(ManualAdhocDto.convertListToDto(selectedData,expectedDataTypes));
 	        response.setStatus("SUCCESS");
 	    } catch (Exception e) {
@@ -153,6 +156,7 @@ public class ExcelFileUploadController {
 	public String saveData(@RequestBody List<List<String>> selectedData) {
 		try {
 
+			// save the selected and validate data only.
 			manualAdhocEntityRepo.saveAll(ManualAdhocEntity.convertListToEntity(selectedData));
 
 			return "SUCCESS";

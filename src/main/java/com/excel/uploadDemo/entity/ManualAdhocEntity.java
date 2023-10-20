@@ -1,4 +1,4 @@
-package com.excel.uploadDemo.dto;
+package com.excel.uploadDemo.entity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,8 +40,8 @@ public class ManualAdhocEntity {
 
 			for (List<String> data : dataList) {
 
-				// if data is valid then n then need to save
-				if (data.get(7).equalsIgnoreCase("true")) {
+				// if data is selected and valid then n then need to save
+				if (data.get(0).equalsIgnoreCase("true") && data.get(7).equalsIgnoreCase("true")) {
 
 					ManualAdhocEntity manualAdhoc = new ManualAdhocEntity();
 

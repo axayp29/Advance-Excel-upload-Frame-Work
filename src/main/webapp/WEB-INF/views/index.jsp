@@ -297,7 +297,7 @@ function dataTableScript(response){
 			.DataTable(
 					{
 						data : response.manualAdhocData,
-						order: [[1, 'asc']],
+						order: [[1, 'asc']], // for order by the second column SR. NO.
 						columns : [
 							
 							{
@@ -316,6 +316,7 @@ function dataTableScript(response){
 								} 
 							},
 							
+							// For Serial No.
 							{
 								data : 'selected',
 								
@@ -323,6 +324,7 @@ function dataTableScript(response){
 							
 							{
 								data : 'date',
+								// render function for the display purpose as a input type
 								 render : function(
 										data,
 										type,
@@ -406,6 +408,7 @@ function dataTableScript(response){
 
 									 if(type === 'display')
 									 {
+										 // to get the valid column data and appenda here valid as a hidden
 										 var valid = row.valid;
 										 
 									 return '<input type="text" value="' + data + '" /><input type="hidden" value="' + valid + '" />';
@@ -436,6 +439,7 @@ function dataTableScript(response){
 
 						],
 						
+						// for the display a serial no. 
 						columnDefs : [ {
 							targets : 1,
 							render : function(data,
@@ -449,7 +453,7 @@ function dataTableScript(response){
 
 						],
 						
-						
+						// valid and non valid grid change color
 						rowCallback : function(row,
 								data, index) {
 							if (data.valid) {
@@ -471,7 +475,7 @@ function dataTableScript(response){
 					});
 	
 	
-	
+	// for valid count and non valid count
 	 $('#myDataTable').DataTable().rows().data().each(function (rowData) {
         if (rowData.valid) {
             validCount++;
@@ -495,6 +499,7 @@ function dataTableScript(response){
 
 <script type="text/javascript">
 
+// for the clicking on the delete button
 $('#myDataTable').on('click', '.delete-button', function () {
 	var data = $('#myDataTable').DataTable().row($(this).closest('tr')).data();
     $('#myDataTable').DataTable().row($(this).closest('tr')).remove().draw(false);
@@ -506,6 +511,7 @@ $('#myDataTable').on('click', '.delete-button', function () {
 </script>
 
 <script type="text/javascript">
+// when change on checkbox update the prop and value
  function checkBoxChanged(checkbox) {
 	
     console.log('checked: ' + checkbox.checked);

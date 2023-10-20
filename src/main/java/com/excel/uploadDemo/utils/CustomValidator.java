@@ -45,6 +45,7 @@ public class CustomValidator {
 	}
 	
 	
+	// validate date format
 	 public static boolean isValidTimeFormat(String timeString) {
 		 
 	        // Define regular expressions for "HH:mm" format and "WO"
@@ -55,6 +56,7 @@ public class CustomValidator {
 	        return timeString.matches(timePattern) || timeString.equalsIgnoreCase(woPattern);
 	    }
 	 
+	 // validate date format
 	 public static boolean isValidDateFormat(String dateString) {
 		    // Define a regular expression for "dd/MM/yyyy" format
 		    String datePattern = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/(19|20)\\d\\d$";

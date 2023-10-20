@@ -35,6 +35,7 @@ public class ExcelUploadServiceImpl implements ExcelUploadMasterService {
 		uploadMaster.setBranchId(branchId);
 		uploadMaster.setUploadedBy(userId);
 		
+		// convert excel file to the md5 hashcode
 		uploadMaster.setMd5HashCode(MD5ExcelHashCodeSevice.convertExcelFileToMD5HashCode(fileLocation));
 		
 		excelUploadMasterRepo.save(uploadMaster);
