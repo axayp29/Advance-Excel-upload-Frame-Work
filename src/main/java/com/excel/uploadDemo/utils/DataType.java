@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum DataType {
-    STRING,
+    EMPTY,
+	STRING,
     NUMERIC,
     BOOLEAN,
     FORMULA

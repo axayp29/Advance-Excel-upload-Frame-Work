@@ -42,10 +42,16 @@ public class ColumnValidator {
 	public static boolean isTypeValid(String stringValue, DataType expectedType) {
 		try {
 
+			// if data type is empty then no need check any string you can provide or not it's not affect in validation
+			if(expectedType != DataType.EMPTY)
 			if (stringValue == null || stringValue.isBlank() || stringValue.isEmpty())
 				return false;
 
 			switch (expectedType) {
+			
+			case EMPTY:
+				return true; // Any string is valid for STRING.
+			
 			case STRING:
 				return true; // Any string is valid for STRING.
 			case NUMERIC:

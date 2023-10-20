@@ -87,12 +87,14 @@ h1 {
 					<thead>
 						<tr>
 							<th>ID</th>
+							<th>Sr No.</th>
 							<th>Date</th>
 							<th>Employee Code</th>
 							<th>Employee Name</th>
 							<th>Attendance Time</th>
 							<th>Attendance Type</th>
 							<th>Shift Code</th>
+							
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -112,7 +114,7 @@ h1 {
 
 			<button id="validateData" class="btn btn-info">Validate Data</button>
 
-			<button id="save-button" class="btn btn-success">Save Data</button>
+			<button id="save-button" class="btn btn-success">Save Valid Data</button>
 
 		</div>
 
@@ -133,6 +135,14 @@ h1 {
 
 			syncData();
 		});
+		
+		$('#save-button').on('click', function() {
+
+			saveData();
+		});
+		
+		
+		
 	});
 	</script>
 
@@ -222,6 +232,56 @@ function syncData() {
 
 </script>
 
+
+<script type="text/javascript">
+
+
+function saveData() {
+
+	 var selectedData = [];
+
+     // Get All the Rows form the front end
+     $('#myDataTable').DataTable().$('tr').each(function () {
+     	 var rowData = $(this).find('td').find('input').map(function () {
+              return $(this).val();
+          }).get();
+         selectedData.push(rowData);
+     });
+
+     
+     console.log(selectedData);
+     
+     $('#myDataTable').DataTable().destroy();
+     
+     
+     // Send data to the controller
+      $.ajax({
+         type: 'POST',
+         url: '/saveData',
+         contentType: 'application/json',
+         data: JSON.stringify(selectedData),
+         success: function (response) {
+             
+        	 if (response == 'SUCCESS') {
+        		 console.log('SAVED');
+        		 window.location.reload();
+        		 
+				} else {
+					alert('ERROR');
+				}	 
+         
+         },
+         error: function (error) {
+             // Handle any errors
+         }
+     }); 
+
+	
+}
+
+
+</script>
+
 <script type="text/javascript">
 
 function dataTableScript(response){
@@ -237,9 +297,11 @@ function dataTableScript(response){
 			.DataTable(
 					{
 						data : response.manualAdhocData,
+						order: [[1, 'asc']],
 						columns : [
+							
 							{
-								data : 'id',
+								data : 'selected',
 								 render : function(
 										data,
 										type,
@@ -248,11 +310,17 @@ function dataTableScript(response){
 
 									 if(type === 'display')
 									 {
-									 return '<input type="text" value="' + data + '" />';
+								            return '<input type="checkbox" value="'+ data +'" onchange="checkBoxChanged(this)" class="selectCheckbox" ' + (data ? 'checked' : '') + '>';
 									 }
 								 return data;
 								} 
 							},
+							
+							{
+								data : 'selected',
+								
+							},
+							
 							{
 								data : 'date',
 								 render : function(
@@ -338,7 +406,9 @@ function dataTableScript(response){
 
 									 if(type === 'display')
 									 {
-									 return '<input type="text" value="' + data + '" />';
+										 var valid = row.valid;
+										 
+									 return '<input type="text" value="' + data + '" /><input type="hidden" value="' + valid + '" />';
 									 }
 								 return data;
 								} 
@@ -365,6 +435,21 @@ function dataTableScript(response){
 						    },
 
 						],
+						
+						columnDefs : [ {
+							targets : 1,
+							render : function(data,
+									type, row, meta) {
+								return meta.row
+										+ meta.settings._iDisplayStart
+										+ 1;
+
+							}
+						}
+
+						],
+						
+						
 						rowCallback : function(row,
 								data, index) {
 							if (data.valid) {
@@ -372,13 +457,13 @@ function dataTableScript(response){
 										.css(
 												'background-color',
 												'#90EE90');
-								//validCount++;
+								
 							} else {
 								$(row)
 										.css(
 												'background-color',
 												'#ffcccb');
-								// unvalidCount++;
+								
 							}
 
 						},
@@ -400,7 +485,7 @@ function dataTableScript(response){
 	$('#validCountDisplay').text('Valid Count : ' + validCount);
 
 	// Update the un-valid count display
-	$('#unvalidCountDisplay').text('Un-Valid Count : ' + unvalidCount);
+	$('#unvalidCountDisplay').text('Non-Valid Count : ' + unvalidCount);
 
 	
 }
@@ -419,6 +504,27 @@ $('#myDataTable').on('click', '.delete-button', function () {
 });
 
 </script>
+
+<script type="text/javascript">
+ function checkBoxChanged(checkbox) {
+	
+    console.log('checked: ' + checkbox.checked);
+
+    if (checkbox.checked) {
+    	$(checkbox).prop('checked', true);
+    	$(checkbox).val(true);
+
+    } else {
+    	$(checkbox).prop('checked', false);
+    	$(checkbox).val(false);
+
+    }
+    
+   
+}
+
+</script>
+
 
 
 </body>

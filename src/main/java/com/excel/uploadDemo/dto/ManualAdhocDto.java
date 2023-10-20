@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class ManualAdhocDto {
 	
-	private String id;
+	private boolean isSelected;
 	
 	private String date;
 	
@@ -41,7 +41,10 @@ public class ManualAdhocDto {
 			for (List<String> data : dataList) {
 
 				ManualAdhocDto manualAdhocData = new ManualAdhocDto();
-				manualAdhocData.setId(data.get(0));
+				
+				if(data.get(0).equalsIgnoreCase("true"))
+				manualAdhocData.setSelected(true);
+				
 				manualAdhocData.setDate(data.get(1));
 				manualAdhocData.setEmpCd(data.get(2));
 				manualAdhocData.setEmployeeName(data.get(3));

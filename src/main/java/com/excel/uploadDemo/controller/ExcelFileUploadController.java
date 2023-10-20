@@ -21,6 +21,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.excel.uploadDemo.dto.AjaxResponse;
 import com.excel.uploadDemo.dto.ManualAdhocDto;
+import com.excel.uploadDemo.dto.ManualAdhocEntity;
+import com.excel.uploadDemo.repo.ManualAdhocEntityRepo;
 import com.excel.uploadDemo.utils.ColumnValidator;
 import com.excel.uploadDemo.utils.CommonConstant;
 import com.excel.uploadDemo.utils.CustomValidator;
@@ -33,6 +35,9 @@ public class ExcelFileUploadController {
 
 	@Autowired
 	private FileUploadService fileUploadService;
+	
+	@Autowired
+	private ManualAdhocEntityRepo manualAdhocEntityRepo;
 
 	@GetMapping(value = "index")
 	public String getDemoPage() {
@@ -58,10 +63,9 @@ public class ExcelFileUploadController {
 	            
 	            // column and Data Type Map creation
 	            Map<Integer, DataType> expectedDataTypes = ColumnValidator.columnAndDataType(
-	            		Arrays.asList( DataType.NUMERIC,
-	   	            		 DataType.STRING,
-		            		 DataType.STRING,
-		            		 DataType.STRING,
+	            		Arrays.asList(DataType.STRING,
+		            		 DataType.NUMERIC,
+		            		 DataType.EMPTY,
 		            		 DataType.STRING,
 		            		 DataType.STRING,
 		            		 DataType.NUMERIC)
@@ -70,15 +74,15 @@ public class ExcelFileUploadController {
 	            
 	            // Here all the column convert into the String 
 				
-					manualAdhoc.setId(ExcelUtils.getCellValueAsString(row.getCell(0)));
-					manualAdhoc.setDate(ExcelUtils.getCellValueAsString(row.getCell(1)));
-					manualAdhoc.setEmpCd(ExcelUtils.getCellValueAsString(row.getCell(2)));
-					manualAdhoc.setEmployeeName(ExcelUtils.getCellValueAsString(row.getCell(3)));
-					manualAdhoc.setAttendanceTime(ExcelUtils.getCellValueAsString(row.getCell(4)));
-					manualAdhoc.setAttendanceType(ExcelUtils.getCellValueAsString(row.getCell(5)));
-					manualAdhoc.setShiftCode(ExcelUtils.getCellValueAsString(row.getCell(6)));
+					manualAdhoc.setSelected(true);
+					manualAdhoc.setDate(ExcelUtils.getCellValueAsString(row.getCell(0)));
+					manualAdhoc.setEmpCd(ExcelUtils.getCellValueAsString(row.getCell(1)));
+					manualAdhoc.setEmployeeName(ExcelUtils.getCellValueAsString(row.getCell(2)));
+					manualAdhoc.setAttendanceTime(ExcelUtils.getCellValueAsString(row.getCell(3)));
+					manualAdhoc.setAttendanceType(ExcelUtils.getCellValueAsString(row.getCell(4)));
+					manualAdhoc.setShiftCode(ExcelUtils.getCellValueAsString(row.getCell(5)));
 			
-					// checked rows values if not validate with column data type any single entry then not consider in calculation 
+					// checked rows values if not validate with column data type any single entry then not consider in valid 
 		            boolean allValid = expectedDataTypes.keySet()
 		                    .stream()
 		                    .map(key -> ColumnValidator.isTypeValid(ExcelUtils.getCellValueAsString(row.getCell(key)), expectedDataTypes.get(key)))
@@ -124,13 +128,13 @@ public class ExcelFileUploadController {
 	    	
 	    	  // column and Data Type Map creation
             Map<Integer, DataType> expectedDataTypes = ColumnValidator.columnAndDataType(
-            		Arrays.asList( DataType.NUMERIC,
-   	            		 DataType.STRING,
-	            		 DataType.STRING,
-	            		 DataType.STRING,
-	            		 DataType.STRING,
-	            		 DataType.STRING,
-	            		 DataType.NUMERIC)
+            		Arrays.asList(DataType.STRING,
+            				DataType.STRING,
+		            		 DataType.NUMERIC,
+		            		 DataType.EMPTY,
+		            		 DataType.STRING,
+		            		 DataType.STRING,
+		            		 DataType.NUMERIC)
             		
             		 );
 	    	
@@ -144,7 +148,21 @@ public class ExcelFileUploadController {
 	}
 
 	
-	
+	@PostMapping(value = "/saveData")
+	@ResponseBody
+	public String saveData(@RequestBody List<List<String>> selectedData) {
+		try {
+
+			manualAdhocEntityRepo.saveAll(ManualAdhocEntity.convertListToEntity(selectedData));
+
+			return "SUCCESS";
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "ERROR";
+	}
 	
 	
 	
