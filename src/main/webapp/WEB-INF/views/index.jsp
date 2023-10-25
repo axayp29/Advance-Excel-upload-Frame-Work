@@ -267,7 +267,7 @@ function saveData() {
         		 window.location.reload();
         		 
 				} else {
-					alert('ERROR');
+					console.log(response);
 				}	 
          
          },

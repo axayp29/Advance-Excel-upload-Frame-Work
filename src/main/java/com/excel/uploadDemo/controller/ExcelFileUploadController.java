@@ -155,6 +155,16 @@ public class ExcelFileUploadController {
 	@ResponseBody
 	public String saveData(@RequestBody List<List<String>> selectedData) {
 		try {
+			
+			// when i put this ui is not proper so commentend but this is working in my other project no ui problem is faced
+			/*
+			 * long inValidCount = selectedData.stream() .filter(x ->
+			 * x.get(0).equalsIgnoreCase("true")) .filter(x ->
+			 * !x.get(7).equalsIgnoreCase("true")) .count();
+			 * 
+			 * if(inValidCount != 0) return
+			 * "Selected "+inValidCount+" Rows are not valid For Save.";
+			 */
 
 			// save the selected and validate data only.
 			manualAdhocEntityRepo.saveAll(ManualAdhocEntity.convertListToEntity(selectedData));
